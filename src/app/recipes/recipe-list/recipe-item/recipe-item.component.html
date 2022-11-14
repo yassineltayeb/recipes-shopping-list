@@ -1,0 +1,24 @@
+<a
+  style="cursor: pointer"
+  class="list-group-item clearfix"
+  [routerLink]="[index]"
+>
+  <ul class="list-group">
+    <li
+      routerLinkActive="active"
+      class="list-group-item d-flex justify-content-between align-items-start"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">{{ recipe.name }}</div>
+        {{ recipe.description }}
+      </div>
+      <span
+        ><img
+          class="img-responsive"
+          style="max-width: 50px"
+          [src]="recipe.imagePath"
+          [alt]="recipe.name"
+      /></span>
+    </li>
+  </ul>
+</a>
