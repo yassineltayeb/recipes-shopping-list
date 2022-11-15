@@ -4,7 +4,10 @@
     <hr />
     <ul
       class="list-group"
-      *ngFor="let ingredient of ingredients; let index = index"
+      *ngFor="
+        let ingredient of (ingredients | async).ingredients;
+        let index = index
+      "
     >
       <a
         class="list-group-item"
