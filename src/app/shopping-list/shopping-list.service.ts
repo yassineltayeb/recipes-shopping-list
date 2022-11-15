@@ -1,4 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredients.model';
 
@@ -10,11 +11,20 @@ export class ShoppingListService {
   startedEditing = new Subject<number>();
   ingredientsChanged = new Subject<Ingredient[]>();
 
+  constructor(private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) { }
+
   getIngredients() {
+    this.store.select('shoppingList').subscribe((ingredients: { ingredients: Ingredient[] }) => {
+      this.ingredients = ingredients.ingredients;
+    })
+
     return this.ingredients;
   }
 
   getIngredient(id: number) {
+    this.store.select('shoppingList').subscribe((ingredients: { ingredients: Ingredient[] }) => {
+      this.ingredients = ingredients.ingredients;
+    })
     return this.ingredients[id];
   }
 
