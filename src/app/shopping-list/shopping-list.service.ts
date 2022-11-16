@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredients.model';
+import * as fromShoppingList from './store/shopping-list.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ShoppingListService {
   startedEditing = new Subject<number>();
   ingredientsChanged = new Subject<Ingredient[]>();
 
-  constructor(private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) { }
+  constructor(private store: Store<fromShoppingList.AppState>) { }
 
   getIngredients() {
     this.store.select('shoppingList').subscribe((ingredients: { ingredients: Ingredient[] }) => {
