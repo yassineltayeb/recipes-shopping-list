@@ -5,6 +5,9 @@ import { AuthService } from './auth.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-auth',
@@ -17,12 +20,22 @@ export class AuthComponent implements OnInit {
   loginForm: FormGroup;
   error: string = null;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
     this.initLoginForm();
-  }
 
+    this.store.select('auth').subscribe(authState => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+      if (this.error) {
+        console.log('error', this.error);
+      }
+    });
+  }
+ 
   initLoginForm() {
     this.loginForm = new FormGroup({
       email: new FormControl(null, [
@@ -61,19 +74,19 @@ export class AuthComponent implements OnInit {
     let authObs: Observable<AuthResponseData>;
 
     if (this.isLoginMode) {
-      authObs = this.authService.login(authRequestData);
-
+      this.store.dispatch(new AuthActions.LoginStart({ email: authRequestData.email, password: authRequestData.password }));
     } else {
       authObs = this.authService.signUp(authRequestData);
     }
 
-    authObs.subscribe((res: AuthResponseData) => {
-      this.isLoading = false;
-      this.router.navigate(['/recipes'])
-    }, (error) => {
-      this.error = error;
-      this.isLoading = false;
-    });
+
+    // authObs.subscribe((res: AuthResponseData) => {
+    //   this.isLoading = false;
+    //   this.router.navigate(['/recipes'])
+    // }, (error) => {
+    //   this.error = error;
+    //   this.isLoading = false;
+    // });
 
     this.loginForm.reset();
   }
